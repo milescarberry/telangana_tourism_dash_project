@@ -65,7 +65,6 @@ def get_dataset():
 
 
 # Dashboard Title
-
 st.write(
 
     "<h1><center>Title</center></h1>",
@@ -99,13 +98,6 @@ st.write("<br><br>", unsafe_allow_html=True)
 
 
 dom_df = get_dataset()
-
-
-if 'unique_districts' not in st.session_state:
-
-
-    st.session_state.unique_districts = list(dom_df.district.unique())
-
 
 
 # Sidebar Filters
@@ -270,46 +262,15 @@ with st.sidebar:
 
     st.write("<br>", unsafe_allow_html=True)
 
-
     # District Filter
-
 
     district_filter = ['All']
 
-    # unique_districts = list(dom_df.district.unique())
+    unique_districts = list(dom_df.district.unique())
 
-    st.session_state.unique_districts.sort()
+    unique_districts.sort()
 
-
-    district_filter.extend(st.session_state.unique_districts)
-
-
-    def district_filt_callback_func():
-
-
-    	# dom_df = get_dataset()
-
-
-    	# dom_df = dom_df[dom_df['year'].isin(st.session_state.new_year_len)]
-
-
-    	if 'All' in st.session_state.new_districts:
-
-
-    		st.session_state.new_districts = st.session_state.unique_districts
-
-
-
-    	st.write(st.session_state.new_districts)
-
-
-    	# else:
-
-
-    	# 	dom_df = dom_df[dom_df.district.isin(st.session_state.new_districts)]
-
-
-
+    district_filter.extend(unique_districts)
 
     district_filt = st.multiselect(
 
@@ -318,11 +279,7 @@ with st.sidebar:
 
         district_filter,
 
-        default='All',
-
-        on_change = district_filt_callback_func,
-
-        key = 'new_districts'
+        default='All'
 
     )
 
@@ -410,21 +367,9 @@ with st.sidebar:
     )
 
 
+# Apply Year Filter
 
-# Apply Year & District Filters
-
-
-dom_df = dom_df[
-
-
-	(dom_df['year'].isin(st.session_state.new_year_len)) &
-
-
-	(dom_df['district'].isin(st.session_state.new_districts)) 
-
-
-
-]
+dom_df = dom_df[dom_df['year'].isin(st.session_state.new_year_len)]
 
 
 
@@ -443,7 +388,7 @@ total_domestic_visitors = dom_df['domestic_visitors'].sum()
 total_foreign_visitors = dom_df['foreign_visitors'].sum()
 
 
-# overall_d_to_f = int(round(total_domestic_visitors / total_foreign_visitors, 0))
+overall_d_to_f = int(round(total_domestic_visitors / total_foreign_visitors, 0))
 
 
 with metcol1:
@@ -474,16 +419,16 @@ with metcol2:
 
 
 
-# with metcol3:
+with metcol3:
 
 
-# 	st.metric(
+	st.metric(
 
-# 		label = "Domestic to Foreign Visitor Ratio", 
+		label = "Domestic to Foreign Visitor Ratio", 
 
-# 		value = overall_d_to_f
+		value = overall_d_to_f
 
-# 		)
+		)
 
 
 
@@ -2342,7 +2287,7 @@ def more_calcs(
 
     if 'All' in district_filter:
 
-        district_filter = st.session_state.unique_districts
+        district_filter = unique_districts
 
     else:
 
@@ -2936,19 +2881,19 @@ more_calcs()
 # Update Districts
 
 
-# def update_districts(df):
+def update_districts(df):
 
-#     dists_filt = []
+    dists_filt = []
 
-#     if 'All' in district_filt:
+    if 'All' in district_filt:
 
-#         dists_filt = list(df.district.unique())
+        dists_filt = list(df.district.unique())
 
-#     else:
+    else:
 
-#         dists_filt = district_filt
+        dists_filt = district_filt
 
-#     return df[df.district.isin(dists_filt)]
+    return df[df.district.isin(dists_filt)]
 
 
 # District Choropleth Map Function
@@ -2958,7 +2903,7 @@ def district_choropleth(df, geojson):
 
     dom_grp_df = pd.DataFrame()
 
-    # df = update_districts(df=df)
+    df = update_districts(df=df)
 
     if metric != 'Domestic and Foreign Visitors':
 

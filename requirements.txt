@@ -1,0 +1,17 @@
+numpy
+pandas
+matplotlib
+seaborn
+plotly
+scikit-learn
+requests
+pymongo
+python-dotenv
+jupyter
+schedule
+geopy
+statsmodels
+streamlit
+streamlit-autorefresh
+folium
+streamlit-folium

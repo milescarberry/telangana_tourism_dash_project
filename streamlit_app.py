@@ -76,7 +76,7 @@ st.write(
 )
 
 
-st.write("<br><br>", unsafe_allow_html=True)
+st.write("<br>", unsafe_allow_html=True)
 
 
 # Some More Text
@@ -91,7 +91,7 @@ st.write(
 )
 
 
-st.write("<br><br>", unsafe_allow_html=True)
+st.write("<br>", unsafe_allow_html=True)
 
 
 # Getting Data
@@ -156,6 +156,10 @@ with st.sidebar:
         st.session_state.calc_index = 0
 
     def year_multiselect_callback_func():
+
+        if 'All' in st.session_state.new_year_len:
+
+            st.session_state.new_year_len = years
 
         st.session_state.year_len = len(st.session_state.new_year_len)
 
@@ -367,10 +371,26 @@ with st.sidebar:
     )
 
 
+# Update Districts
+
+
+def update_districts(df):
+
+    dists_filt = []
+
+    if 'All' in district_filt:
+
+        dists_filt = list(df.district.unique())
+
+    else:
+
+        dists_filt = district_filt
+
+    return df[df.district.isin(dists_filt)]
+
+
 # Apply Year Filter
-
 dom_df = dom_df[dom_df['year'].isin(st.session_state.new_year_len)]
-
 
 
 # Topside Metrics (KPIs)
@@ -379,13 +399,16 @@ dom_df = dom_df[dom_df['year'].isin(st.session_state.new_year_len)]
 # Creating 3 Columns
 
 
+met_df = update_districts(df=dom_df)
+
+
 metcol1, metcol2, metcol3 = st.columns(3)
 
 
-total_domestic_visitors = dom_df['domestic_visitors'].sum()
+total_domestic_visitors = met_df['domestic_visitors'].sum()
 
 
-total_foreign_visitors = dom_df['foreign_visitors'].sum()
+total_foreign_visitors = met_df['foreign_visitors'].sum()
 
 
 overall_d_to_f = int(round(total_domestic_visitors / total_foreign_visitors, 0))
@@ -393,47 +416,52 @@ overall_d_to_f = int(round(total_domestic_visitors / total_foreign_visitors, 0))
 
 with metcol1:
 
+    with st.container(border=True):
+
+        st.metric(
 
 
-	st.metric(
+            label="Domestic Visitors",
 
-		label="Domestic Visitors", 
 
-		value = f"{total_domestic_visitors:,}"
+            # value = f"{total_domestic_visitors:,}"
 
-		)
 
+            value=f"{total_domestic_visitors / 1000000:.1f}M"
+
+
+        )
 
 
 with metcol2:
 
+    with st.container(border=True):
 
-	st.metric(
+        st.metric(
 
-		label="Foreign Visitors", 
+            label="Foreign Visitors",
 
-		value = f"{total_foreign_visitors:,}"
+            # value = f"{total_foreign_visitors:,}",
 
-		)
+            value=f"{total_foreign_visitors / 1000:.1f}K"
 
-
+        )
 
 
 with metcol3:
 
+	with st.container(border = True):
 
-	st.metric(
+		st.metric(
 
-		label = "Domestic to Foreign Visitor Ratio", 
+			label = "Domestic to Foreign Visitor Ratio",
 
-		value = overall_d_to_f
+			value = overall_d_to_f
 
-		)
+			)
 
 
-
-st.write("<br><br>", unsafe_allow_html = True)
-
+st.write("<br>", unsafe_allow_html=True)
 
 
 # Basic Stats Chart
@@ -652,7 +680,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         fig.update_yaxes(title="Domestic Visitors", secondary_y=False)
 
@@ -701,8 +729,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(width=400)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -795,7 +822,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         fig.update_yaxes(title="Domestic Visitors")
 
@@ -843,8 +870,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -937,7 +963,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         fig.update_yaxes(title="Foreign Visitors")
 
@@ -987,8 +1013,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1085,7 +1110,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         fig.update_yaxes(title="D to F Ratio")
 
@@ -1133,13 +1158,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
             )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
 
-plot_stats()
+# plot_stats()
 
 
 # Calc Chart
@@ -1202,7 +1226,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
         if time_val == 'year_quarter':
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         else:
 
@@ -1265,8 +1289,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
             )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1281,8 +1304,6 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
                 (df[m] - df[f'prev_{m}']) / df[f'prev_{m}']
 
             ) * 100
-
-        
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
 
@@ -1379,7 +1400,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
         if time_val == 'year_quarter':
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         else:
 
@@ -1461,6 +1482,8 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
             )
 
+        fig.update_layout(height=391.25)
+
         st.plotly_chart(fig, use_container_width=True)
 
 
@@ -1538,7 +1561,7 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
         )
 
-        fig.update_xaxes(title=' ', tickangle=-45)
+        fig.update_xaxes(title=' ', tickangle=-55)
 
         # fig.update_yaxes(title = f'{metric}_prev_year_percent_change'.replace("_", ' ').title())
 
@@ -1546,7 +1569,7 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
         if time_val == 'year_quarter':
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         else:
 
@@ -1604,8 +1627,7 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
             )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1643,8 +1665,6 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
 
             ) * 100
-
-       
 
         # Dual Axis Chart
 
@@ -1743,7 +1763,7 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
         if time_val == 'year_quarter':
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         else:
 
@@ -1815,6 +1835,8 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
                 )
 
             )
+
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1903,7 +1925,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
         if time_val == 'year_quarter':
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         else:
 
@@ -2018,8 +2040,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
                 )
 
-
-#         fig.update_layout(width = 780)
+        fig.update_layout(height=391.25)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -2055,8 +2076,6 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
 
             ) * 100
-
-        
 
         # Dual Axis Chart
 
@@ -2143,7 +2162,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
         if time_val == 'year_quarter':
 
-            fig.update_xaxes(title=' ', tickangle=-45)
+            fig.update_xaxes(title=' ', tickangle=-55)
 
         else:
 
@@ -2261,9 +2280,9 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
                 )
 
+        fig.update_layout(height=391.25)
+
         st.plotly_chart(fig, use_container_width=True)
-
-
 
 
 # The Calcs Chart
@@ -2869,31 +2888,13 @@ def more_calcs(
 # Calling Calcs Function
 
 
-st.write("<br><br>", unsafe_allow_html=True)
+# st.write("<br><br>", unsafe_allow_html=True)
 
 
-more_calcs()
+# more_calcs()
 
 
 # Telangana Districts Visitors Choropleth Map Section
-
-
-# Update Districts
-
-
-def update_districts(df):
-
-    dists_filt = []
-
-    if 'All' in district_filt:
-
-        dists_filt = list(df.district.unique())
-
-    else:
-
-        dists_filt = district_filt
-
-    return df[df.district.isin(dists_filt)]
 
 
 # District Choropleth Map Function
@@ -3113,12 +3114,19 @@ def district_choropleth(df, geojson):
 
     )
 
+    fig.update_layout(
 
-    fig.update_layout(coloraxis_colorbar=dict(title=' '))
+        coloraxis_colorbar=dict(title=' '),
+
+        coloraxis_showscale=False
+
+    )
+
+
+    # fig.update_layout(height = 391.25)
 
 
     st.plotly_chart(fig, use_container_width=True)
-
 
 
 # Get District GeoJSON File
@@ -3149,10 +3157,109 @@ gjson = get_districts_geojson()
 # Display District Choropleth Map
 
 
-st.write("<br><br>", unsafe_allow_html = True)
+# st.write("<br><br>", unsafe_allow_html = True)
 
 
-district_choropleth(df=dom_df, geojson=gjson)
+# district_choropleth(df=dom_df, geojson=gjson)
+
+
+# Dash Layout
+
+
+# Create Two Columns
+
+
+dcol1, dcol2 = st.columns(2)
+
+
+with dcol1:
+
+    with st.container(border=True):
+
+        district_choropleth(df=dom_df, geojson=gjson)
+
+
+with dcol2:
+
+    with st.container(border=True):
+
+        # Creating 2 Tabs
+
+        tab1, tab2 = st.tabs(["Tab 1", "Tab 2"])
+
+        with tab1:
+
+            plot_stats()
+
+        with tab2:
+
+            more_calcs()
+
+
+# Styling
+
+
+def styling_func():
+
+    css = '''
+
+
+		div[class^='st-emotion-cache-16txtl3'] { 
+
+
+		 padding-top: 1rem; 
+
+
+		}
+
+
+		div[class^='block-container'] { 
+
+		  padding-top: 1rem; 
+
+		}
+
+
+		[data-testid="stMetric"] {
+		    width: fit-content;
+		    margin: auto;
+		}
+
+		[data-testid="stMetric"] > div {
+		    width: fit-content;
+		    margin: auto;
+		}
+
+		[data-testid="stMetric"] label {
+		    width: fit-content;
+		    margin: auto;
+		}
+
+
+		[data-testid="stMarkdownContainer"] > p {
+
+          font-weight: bold;
+
+        }
+
+
+        [data-testid="stMetricValue"] {
+
+          font-weight: bold;
+          
+        }
+
+
+	'''
+
+    st.write(
+
+        f"<style>{css}</style>",
+
+        unsafe_allow_html=True)
+
+
+styling_func()
 
 
 # Footer Section

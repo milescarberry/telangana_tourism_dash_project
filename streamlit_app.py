@@ -157,6 +157,13 @@ with st.sidebar:
 
     def year_multiselect_callback_func():
 
+
+    	if len(st.session_state.new_year_len) == 0:
+
+
+    		st.session_state.new_year_len = years
+
+
         if 'All' in st.session_state.new_year_len:
 
             st.session_state.new_year_len = years
@@ -235,6 +242,7 @@ with st.sidebar:
 
                 ]
 
+
     year_filter = st.multiselect(
 
 
@@ -258,6 +266,17 @@ with st.sidebar:
 
         year_filter = years
 
+
+    elif len(year_filter) == 0:
+
+    	year_filter = years
+
+
+    else:
+
+    	pass
+
+
     # if len(year_filter) > 1:
 
     # 	calcs['Month'] = ['Percent Change From Previous Month']
@@ -276,6 +295,15 @@ with st.sidebar:
 
     district_filter.extend(unique_districts)
 
+
+    def district_filt_callback_func():
+
+
+    	if len(st.session_state.new_district_filt) == 0:
+
+    		st.session_state.new_district_filt = unique_districts
+
+
     district_filt = st.multiselect(
 
 
@@ -283,7 +311,11 @@ with st.sidebar:
 
         district_filter,
 
-        default='All'
+        default='All',
+
+        on_change = district_filt_callback_func,
+
+        key = 'new_district_filt'
 
     )
 
@@ -378,13 +410,14 @@ def update_districts(df):
 
     dists_filt = []
 
-    if 'All' in district_filt:
+    if 'All' in st.session_state.new_district_filt:
 
         dists_filt = list(df.district.unique())
 
     else:
 
-        dists_filt = district_filt
+        dists_filt = st.session_state.new_district_filt
+
 
     return df[df.district.isin(dists_filt)]
 
@@ -718,7 +751,11 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
                     text=f"Domestic vs. Foreign Visitors for All Districts",
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=14.5)
@@ -737,7 +774,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Domestic vs. Foreign Visitors By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=14.5)
@@ -867,7 +909,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Domestic Visitors for All Districts",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=14.5)
@@ -886,7 +933,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Domestic Visitors By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+
+                    xanchor='center',
+
+                    yanchor='top',
 
                     font=dict(size=14.5)
 
@@ -1015,7 +1067,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Foreign Visitors for All Districts",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+
+                    xanchor='center',
+
+                    yanchor='top',
 
                     font=dict(size=14.5)
 
@@ -1035,7 +1092,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Foreign Visitors By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=14.5)
@@ -1169,7 +1231,11 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Domestic to Foreign Visitor Ratio for All Districts",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=14.5)
@@ -1188,7 +1254,12 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
                     text=f"Domestic to Foreign Visitor Ratio By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                    pad=dict(b=150, l=30),
+                    x=0.5,
+
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=14.5)
@@ -1203,6 +1274,7 @@ def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.
 
 
         st.plotly_chart(fig, use_container_width=True)
+
 
 
 
@@ -1312,7 +1384,11 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
                     text=f"{metric.replace('_', ' ').title()} Percent Change From Previous {st.session_state.time_ax.title()} For All Districts",
 
 
-                    pad=dict(b=150, l=26.5),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1330,7 +1406,11 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
                     text=f"{metric.replace('_', ' ').title()} Percent Change From Previous {st.session_state.time_ax.title()} By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                    pad=dict(b=150, l=26.5),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1516,7 +1596,11 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
                     text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} Percent Change From Previous {st.session_state.time_ax.title()} For All Districts",
 
 
-                    pad=dict(b=150, l=26.5),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1533,8 +1617,11 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
                     text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} Percent Change From Previous {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
+                    x=0.5,
 
-                    pad=dict(b=150, l=26.5),
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1667,7 +1754,11 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
                     text=f"{metric.replace('_', ' ').title()} YOY Percent Change For All Districts",
 
 
-                    pad=dict(b=150, l=26.5),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1684,8 +1775,11 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
                     text=f"{metric.replace('_', ' ').title()} YOY Percent Change By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
+                    x=0.5,
 
-                    pad=dict(b=150, l=26.5),
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1888,7 +1982,11 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
                     text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} YOY Percent Change For All Districts",
 
 
-                    pad=dict(b=150, l=26.5),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -1906,7 +2004,11 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
                     text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} YOY Percent Change By {st.session_state.time_ax.title()} For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                    pad=dict(b=150, l=26.5),
+                    x=0.5,
+
+                    xanchor='center',
+
+                    yanchor='top',
 
 
                     font=dict(size=13.5)
@@ -2066,7 +2168,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric.replace('_', ' ').title()} YTM Percent Change For All Districts",
 
 
-                        pad=dict(b=150, l=26.5),
+                     	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2084,7 +2190,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric.replace('_', ' ').title()} YTM Percent Change For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2107,7 +2217,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric.replace('_', ' ').title()} YTQ Percent Change For All Districts",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2125,7 +2239,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric.replace('_', ' ').title()} YTQ Percent Change For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2327,7 +2445,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} YTM Percent Change For All Districts",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2345,7 +2467,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} YTM Percent Change For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2365,7 +2491,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} YTQ Percent Change For All Districts",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2383,7 +2513,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                         text=f"{metric[0].replace('_', ' ').title()} vs. {metric[1].replace('_', ' ').title()} YTQ Percent Change For {district_filter[0] if len(district_filter) == 1 else 'The Selected Districts'}",
 
 
-                        pad=dict(b=150, l=26.5),
+                    	x=0.5,
+
+                    	xanchor='center',
+
+                    	yanchor='top',
 
 
                         font=dict(size=13.5)
@@ -2396,6 +2530,8 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
 
         st.plotly_chart(fig, use_container_width=True)
+
+
 
 
 

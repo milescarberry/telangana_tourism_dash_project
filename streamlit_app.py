@@ -31,6 +31,11 @@ import warnings
 import json
 
 
+from streamlit_autorefresh import st_autorefresh
+
+
+
+
 st.set_page_config(
 
 
@@ -52,6 +57,22 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 
+
+# Update dataframe every 6 hours
+
+
+refresh_count = st_autorefresh(
+
+	# interval = 6 * 60 * 60 * 1000, 
+
+	interval = 5 * 60 * 1000,
+
+	key = "dataframerefresh"
+
+	)
+
+
+
 @st.cache_data
 def get_dataset():
 
@@ -67,7 +88,7 @@ def get_dataset():
 # Dashboard Title
 st.write(
 
-    "<h1><center>Title</center></h1>",
+    "<h1 class='dashtitle'><center>Telangana Tourism Tracker: Domestic and Foreign Visitors (2016-2019)</center></h1>",
 
 
     unsafe_allow_html=True
@@ -84,7 +105,7 @@ st.write("<br>", unsafe_allow_html=True)
 
 st.write(
 
-    "<h5><center>Some more text comes here.</center></h5>",
+    "<h5 class='dashsubtitle'><center>Some more text comes here.</center></h5>",
 
     unsafe_allow_html=True
 
@@ -159,7 +180,7 @@ with st.sidebar:
 
         if len(st.session_state.new_year_len) == 0:
 
-            st.session_state.new_year_len = years
+            st.session_state.new_year_len = [2019]
 
         if 'All' in st.session_state.new_year_len:
 
@@ -264,7 +285,7 @@ with st.sidebar:
 
     elif len(year_filter) == 0:
 
-        year_filter = years
+        year_filter = [2019]
 
     else:
 
@@ -292,7 +313,8 @@ with st.sidebar:
 
         if len(st.session_state.new_district_filt) == 0:
 
-            st.session_state.new_district_filt = unique_districts
+            st.session_state.new_district_filt = ['Hyderabad']
+
 
     district_filt = st.multiselect(
 
@@ -3477,6 +3499,20 @@ def styling_func():
 
           font-weight: bold;
 
+
+        }
+
+
+        [class^='dashtitle'] {
+
+          font-size: 34px;
+
+        }
+
+
+        [class^='dashsubtitle'] {
+
+          font-size: 17px;
 
         }
           

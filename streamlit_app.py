@@ -1555,10 +1555,10 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
         )
 
-        fig.update_yaxes(title="Domestic Visitors",
+        fig.update_yaxes(title="Domestic Visitors % Change",
                          secondary_y=False, showgrid=True)
 
-        fig.update_yaxes(title="Foreign Visitors",
+        fig.update_yaxes(title="Foreign Visitors % Change",
                          secondary_y=True, showgrid=False)
 
         if time_val == 'year_quarter':
@@ -2558,6 +2558,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
         st.plotly_chart(fig, use_container_width=True)
 
+        
 
 # The Calcs Chart
 

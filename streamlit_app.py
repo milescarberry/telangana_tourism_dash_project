@@ -3237,7 +3237,7 @@ def district_choropleth(df, geojson):
             center=dict(lat=18.107054923278803, lon=79.2766835839577),
 
 
-            mapbox_style="carto-positron",
+            mapbox_style="carto-darkmatter",
 
 
             zoom=6.0,
@@ -3340,7 +3340,7 @@ def district_choropleth(df, geojson):
             center=dict(lat=18.107054923278803, lon=79.2766835839577),
 
 
-            mapbox_style="carto-positron",
+            mapbox_style="carto-darkmatter",
 
 
             zoom=6.0,

@@ -311,13 +311,14 @@ with st.sidebar:
 
             st.session_state.new_district_filt = ['Hyderabad']
 
-        elif 'All' in st.session_state.new_district_filt:
+        # elif 'All' in st.session_state.new_district_filt:
 
-        	st.session_state.new_district_filt = unique_districts
+        # 	st.session_state.new_district_filt = unique_districts
 
         else:
 
         	pass
+
 
     district_filt = st.multiselect(
 
@@ -326,7 +327,7 @@ with st.sidebar:
 
         district_filter,
 
-        default=unique_districts,
+        default=['All'],
 
         on_change=district_filt_callback_func,
 
@@ -532,7 +533,7 @@ st.write("<br>", unsafe_allow_html=True)
 
 # Basic Stats Chart
 
-def plot_stats(visitor_type=metric, district_filter=st.session_state.new_district_filt, time_axis=st.session_state.time_ax):
+def plot_stats(visitor_type=metric, district_filter=district_filt, time_axis=st.session_state.time_ax):
 
     df_ = dom_df
 
@@ -822,7 +823,7 @@ def plot_stats(visitor_type=metric, district_filter=st.session_state.new_distric
 
             )
 
-        fig.update_layout(width=400, height=391.25)
+        fig.update_layout(width=400, height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -980,7 +981,7 @@ def plot_stats(visitor_type=metric, district_filter=st.session_state.new_distric
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1140,7 +1141,7 @@ def plot_stats(visitor_type=metric, district_filter=st.session_state.new_distric
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1302,7 +1303,7 @@ def plot_stats(visitor_type=metric, district_filter=st.session_state.new_distric
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1447,7 +1448,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1658,7 +1659,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1816,7 +1817,7 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -2045,7 +2046,7 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
 
             )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -2280,7 +2281,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
                 )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -2554,11 +2555,11 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
                 )
 
-        fig.update_layout(height=391.25)
+        fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
 
-        
+
 
 # The Calcs Chart
 
@@ -2575,7 +2576,7 @@ def more_calcs(
     calc=calc,
 
 
-    district_filter=st.session_state.new_district_filt
+    district_filter=district_filt
 
 ):
 
@@ -3178,7 +3179,7 @@ def more_calcs(
 def district_choropleth(df, geojson):
 
 
-    # df = update_districts(df=df)
+    df = update_districts(df=df)
 
 
     exp.set_mapbox_access_token(st.secrets["mapbox_access_token"])
@@ -3187,7 +3188,7 @@ def district_choropleth(df, geojson):
     dom_grp_df = pd.DataFrame()
 
 
-    df = df[df.district.isin(st.session_state.new_district_filt)]
+    # df = df[df.district.isin(st.session_state.new_district_filt)]
 
 
     if metric != 'Domestic and Foreign Visitors':
@@ -3414,7 +3415,7 @@ def district_choropleth(df, geojson):
     )
 
 
-    fig.update_layout(width=400)
+    fig.update_layout(height = 509, width=400)
 
 
     st.plotly_chart(fig)

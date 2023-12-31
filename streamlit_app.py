@@ -1952,10 +1952,10 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
         )
 
         fig.update_yaxes(
-            title=f"{metric[0].replace('_', ' ').title()} YOY % Change", secondary_y=False, showgrid=True)
+            title=f"{metric[0].replace('_', ' ').title()} % Change", secondary_y=False, showgrid=True)
 
         fig.update_yaxes(
-            title=f"{metric[1].replace('_', ' ').title()} YOY % Change", secondary_y=True, showgrid=False)
+            title=f"{metric[1].replace('_', ' ').title()} % Change", secondary_y=True, showgrid=False)
 
         if time_val == 'year_quarter':
 
@@ -2418,10 +2418,10 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
         if time_val == 'date':
 
             fig.update_yaxes(
-                title=f"{metric[0].replace('_', ' ').title()} YTM % Change", secondary_y=False, showgrid=True)
+                title=f"{metric[0].replace('_', ' ').title()} % Change", secondary_y=False, showgrid=True)
 
             fig.update_yaxes(
-                title=f"{metric[1].replace('_', ' ').title()} YTM % Change", secondary_y=True, showgrid=False)
+                title=f"{metric[1].replace('_', ' ').title()} % Change", secondary_y=True, showgrid=False)
 
             hovertemp = "<br><br>".join([
 
@@ -2441,10 +2441,10 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
         else:
 
             fig.update_yaxes(
-                title=f"{metric[0].replace('_', ' ').title()} YTQ % Change", secondary_y=False, showgrid=True)
+                title=f"{metric[0].replace('_', ' ').title()} % Change", secondary_y=False, showgrid=True)
 
             fig.update_yaxes(
-                title=f"{metric[1].replace('_', ' ').title()} YTQ % Change", secondary_y=True, showgrid=False)
+                title=f"{metric[1].replace('_', ' ').title()} % Change", secondary_y=True, showgrid=False)
 
             hovertemp = "<br><br>".join([
 
@@ -2558,6 +2558,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
         fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
+        
 
 
 

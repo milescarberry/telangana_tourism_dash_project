@@ -2430,7 +2430,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                 f"<b>First {st.session_state.time_ax}: </b>" +
                 "<b>%{customdata[3]:.2s} visitors</b>",
 
-                f"<b></b>" +
+                f"<b>This {st.session_state.time_ax}: </b>" +
                 "<b>%{customdata[1]:.2s} visitors</b>",
 
                 "<b>YTM: </b>" + "<b>%{y:.2f} %</b><extra></extra>"
@@ -2453,7 +2453,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                 f"<b>First {st.session_state.time_ax}: </b>" +
                 "<b>%{customdata[4]:.2s} visitors</b>",
 
-                f"<b></b>" +
+                f"<b>This {st.session_state.time_ax}: </b>" +
                 "<b>%{customdata[1]:.2s} visitors</b>",
 
                 "<b>YTQ: </b>" + "<b>%{y:.2f} %</b><extra></extra>"
@@ -2461,7 +2461,9 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
 
             ])
 
+
         fig.update_traces(hovertemplate=hovertemp)
+
 
         if time_val == 'date':
 
@@ -2558,7 +2560,6 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
         fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
-
 
 
 

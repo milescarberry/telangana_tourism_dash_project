@@ -103,16 +103,16 @@ st.write("<br>", unsafe_allow_html=True)
 # Some More Text
 
 
-st.write(
+# st.write(
 
-    "<h5 class='dashsubtitle'><center>Some more text comes here.</center></h5>",
+#     "<h5 class='dashsubtitle'><center>Some more text comes here.</center></h5>",
 
-    unsafe_allow_html=True
+#     unsafe_allow_html=True
 
-)
+# )
 
 
-st.write("<br>", unsafe_allow_html=True)
+# st.write("<br>", unsafe_allow_html=True)
 
 
 # Getting Data
@@ -393,6 +393,8 @@ with st.sidebar:
 
         year_multiselect_callback_func()
 
+
+
     calc = st.selectbox(
 
 
@@ -409,7 +411,10 @@ with st.sidebar:
         on_change=calc_callback_func,
 
 
-        key='new_calc'
+        key='new_calc',
+
+
+        help = f"\n{'YOY'.upper()}: {'Year on Year Percentage Change.'.title()} {'(Percentage change from previous years month/quarter with current years month/quarter)'.title()}\n\n{'YTM'.upper()}: {'Year to Month Percentage Change. (Percentage Change from First Month of the Year to the current month)'.title()}\n\n{'YTQ'.upper()}: {'Year to Quarter Percentage change. (Percentage change from first quarter of the year to the current quarter)'.title()}\n"
 
 
     )
@@ -1365,7 +1370,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
             "<b>%{x}</b>",
 
 
-            f"<b>Current {st.session_state.time_ax}: </b>" +
+            f"<b></b>" +
             "<b>%{customdata[0]:.2s} visitors</b>",
 
 
@@ -1556,7 +1561,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
                 "<b>%{x}</b>",
 
 
-                f"<b>Current {st.session_state.time_ax}: </b>" +
+                f"<b></b>" +
                 "<b>%{customdata[1]:.2s} visitors</b>",
 
 
@@ -1578,7 +1583,7 @@ def percent_change_from_previous(df, col='month', metric='domestic_visitors', di
                 "<b>%{x}</b>",
 
 
-                f"<b>Current {st.session_state.time_ax}: </b>" +
+                f"<b></b>" +
                 "<b>%{customdata[1]:.2s} visitors</b>",
 
 
@@ -1736,11 +1741,11 @@ def yoy_calc(df, col='month', metric='domestic_visitors', district_filter=[]):
             "<b>%{x}</b>",
 
 
-            f"<b>Current {st.session_state.time_ax}: </b>" +
+            f"<b></b>" +
             "<b>%{customdata[0]:.2s} visitors</b>",
 
 
-            f"<b>Previous Year {st.session_state.time_ax}: </b>" +
+            f"<b>Previous Year: </b>" +
             "<b>%{customdata[1]:.2s} visitors</b>",
 
 
@@ -2408,7 +2413,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                 f"<b>First {st.session_state.time_ax}: </b>" +
                 "<b>%{customdata[3]:.2s} visitors</b>",
 
-                f"<b>Current {st.session_state.time_ax}: </b>" +
+                f"<b></b>" +
                 "<b>%{customdata[1]:.2s} visitors</b>",
 
                 "<b>YTM: </b>" + "<b>%{y:.2f} %</b><extra></extra>"
@@ -2431,7 +2436,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
                 f"<b>First {st.session_state.time_ax}: </b>" +
                 "<b>%{customdata[4]:.2s} visitors</b>",
 
-                f"<b>Current {st.session_state.time_ax}: </b>" +
+                f"<b></b>" +
                 "<b>%{customdata[1]:.2s} visitors</b>",
 
                 "<b>YTQ: </b>" + "<b>%{y:.2f} %</b><extra></extra>"

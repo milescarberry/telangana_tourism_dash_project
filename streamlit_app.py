@@ -37,7 +37,7 @@ from streamlit_autorefresh import st_autorefresh
 st.set_page_config(
 
 
-    page_title="Page Title",
+    page_title="Telangana Tourism Dashboard",
 
 
     layout='wide'
@@ -2558,7 +2558,7 @@ def ytm_ytq_calc(df, col='month', metric='domestic_visitors', district_filter=[]
         fig.update_layout(height=450)
 
         st.plotly_chart(fig, use_container_width=True)
-        
+
 
 
 

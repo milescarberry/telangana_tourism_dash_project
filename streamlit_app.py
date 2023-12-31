@@ -34,8 +34,6 @@ import json
 from streamlit_autorefresh import st_autorefresh
 
 
-
-
 st.set_page_config(
 
 
@@ -57,20 +55,18 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 
-
 # Update dataframe every 6 hours
 
 
 refresh_count = st_autorefresh(
 
-	# interval = 6 * 60 * 60 * 1000, 
+	# interval = 6 * 60 * 60 * 1000,
 
-	interval = 5 * 60 * 1000,
+	interval=5 * 60 * 1000,
 
-	key = "dataframerefresh"
+	key="dataframerefresh"
 
 	)
-
 
 
 @st.cache_data
@@ -315,17 +311,13 @@ with st.sidebar:
 
             st.session_state.new_district_filt = ['Hyderabad']
 
-
         elif 'All' in st.session_state.new_district_filt:
 
-
         	st.session_state.new_district_filt = unique_districts
-
 
         else:
 
         	pass
-
 
     district_filt = st.multiselect(
 
@@ -334,7 +326,7 @@ with st.sidebar:
 
         district_filter,
 
-        default='All',
+        default=unique_districts,
 
         on_change=district_filt_callback_func,
 
@@ -404,8 +396,6 @@ with st.sidebar:
 
         year_multiselect_callback_func()
 
-
-
     calc = st.selectbox(
 
 
@@ -425,7 +415,7 @@ with st.sidebar:
         key='new_calc',
 
 
-        help = f"\n{'YOY'.upper()}: {'Year on Year Percentage Change.'.title()} {'(Percentage change from previous years month/quarter with current years month/quarter)'.title()}\n\n{'YTM'.upper()}: {'Year to Month Percentage Change. (Percentage Change from First Month of the Year to the current month)'.title()}\n\n{'YTQ'.upper()}: {'Year to Quarter Percentage change. (Percentage change from first quarter of the year to the current quarter)'.title()}\n"
+        help=f"\n{'YOY'.upper()}: {'Year on Year Percentage Change.'.title()} {'(Percentage change from previous years month/quarter with current years month/quarter)'.title()}\n\n{'YTM'.upper()}: {'Year to Month Percentage Change. (Percentage Change from First Month of the Year to the current month)'.title()}\n\n{'YTQ'.upper()}: {'Year to Quarter Percentage change. (Percentage change from first quarter of the year to the current quarter)'.title()}\n"
 
 
     )
@@ -482,16 +472,12 @@ try:
 
 except:
 
-
 	overall_d_to_f = np.nan
-
 
 
 else:
 
 	pass
-
-
 
 
 with metcol1:
@@ -3190,10 +3176,14 @@ def more_calcs(
 
 def district_choropleth(df, geojson):
 
-    dom_grp_df = pd.DataFrame()
-
 
     # df = update_districts(df=df)
+
+
+    exp.set_mapbox_access_token(st.secrets["mapbox_access_token"])
+
+
+    dom_grp_df = pd.DataFrame()
 
 
     df = df[df.district.isin(st.session_state.new_district_filt)]
@@ -3218,9 +3208,81 @@ def district_choropleth(df, geojson):
 
         )
 
+
+
+        fig = exp.choropleth_mapbox(
+
+
+            dom_grp_df,
+
+
+            geojson=geojson,
+
+
+            color=f"{'_'.join(metric.lower().split(' '))}",
+
+
+            locations='district',
+
+
+            featureidkey='properties.DISTRICT_N',
+
+
+            color_continuous_scale=exp.colors.sequential.Oranges,
+
+
+            center=dict(lat=18.107054923278803, lon=79.2766835839577),
+
+
+            mapbox_style="carto-positron",
+
+
+            zoom=6.0,
+
+
+
+            custom_data=[
+
+
+                dom_grp_df.district,
+
+
+                dom_grp_df[f"{'_'.join(metric.lower().split(' '))}"]
+
+
+            ]
+
+
+
+        )
+
+
+        hovertemp = "<br><br>".join(
+
+
+            [
+
+                    "<b>%{customdata[0]}</b>",
+
+
+                    f"<b>{metric}: </b>" +
+                "<b>%{customdata[1]:.2s}</b><extra></extra>"
+
+
+            ]
+
+
+        )
+
+        fig.update_traces(hovertemplate=hovertemp)
+
+
+
+
     else:
 
-        dom_grp_df = dom_df.groupby(
+
+        dom_grp_df = df.groupby(
 
 
             ['district'],
@@ -3249,11 +3311,7 @@ def district_choropleth(df, geojson):
         dom_grp_df['total_visitors'] = dom_grp_df.domestic_visitors + \
             dom_grp_df.foreign_visitors
 
-    # st.dataframe(dom_grp_df)
 
-    exp.set_mapbox_access_token(st.secrets["mapbox_access_token"])
-
-    if len(metric.split(' ')) > 2:
 
         fig = exp.choropleth_mapbox(
 
@@ -3331,72 +3389,11 @@ def district_choropleth(df, geojson):
 
         fig.update_traces(hovertemplate=hovertemp)
 
-    else:
-
-        fig = exp.choropleth_mapbox(
-
-
-            dom_grp_df,
-
-
-            geojson=geojson,
-
-
-            color=f"{'_'.join(metric.lower().split(' '))}",
-
-
-            locations='district',
-
-
-            featureidkey='properties.DISTRICT_N',
-
-
-            color_continuous_scale=exp.colors.sequential.Oranges,
-
-
-            center=dict(lat=18.107054923278803, lon=79.2766835839577),
-
-
-            mapbox_style="carto-positron",
-
-
-            zoom=6.0,
 
 
 
-            custom_data=[
 
 
-                dom_grp_df.district,
-
-
-                dom_grp_df[f"{'_'.join(metric.lower().split(' '))}"]
-
-
-            ]
-
-
-
-        )
-
-        hovertemp = "<br><br>".join(
-
-
-            [
-
-                    "<b>%{customdata[0]}</b>",
-
-
-                    f"<b>{metric}: </b>" +
-                "<b>%{customdata[1]:.2s}</b><extra></extra>"
-
-
-            ]
-
-
-        )
-
-        fig.update_traces(hovertemplate=hovertemp)
 
     fig.update_layout(
 
@@ -3415,9 +3412,12 @@ def district_choropleth(df, geojson):
 
     )
 
+
     fig.update_layout(width=400)
 
+
     st.plotly_chart(fig)
+
 
 
 # Get District GeoJSON File
@@ -3467,7 +3467,13 @@ with dcol1:
 
     with st.container(border=True):
 
-        district_choropleth(df=dom_df, geojson=gjson)
+        district_choropleth(
+
+        	df=dom_df, 
+
+        	geojson=gjson
+
+        	)
 
 
 with dcol2:

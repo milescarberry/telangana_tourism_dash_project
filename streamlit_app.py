@@ -316,6 +316,17 @@ with st.sidebar:
             st.session_state.new_district_filt = ['Hyderabad']
 
 
+        elif 'All' in st.session_state.new_district_filt:
+
+
+        	st.session_state.new_district_filt = unique_districts
+
+
+        else:
+
+        	pass
+
+
     district_filt = st.multiselect(
 
 
@@ -460,8 +471,27 @@ total_domestic_visitors = met_df['domestic_visitors'].sum()
 total_foreign_visitors = met_df['foreign_visitors'].sum()
 
 
-overall_d_to_f = int(
-    round(total_domestic_visitors / total_foreign_visitors, 0))
+overall_d_to_f = 0
+
+
+try:
+
+	overall_d_to_f = int(
+	    round(total_domestic_visitors / total_foreign_visitors, 0))
+
+
+except:
+
+
+	overall_d_to_f = np.nan
+
+
+
+else:
+
+	pass
+
+
 
 
 with metcol1:
@@ -3162,7 +3192,12 @@ def district_choropleth(df, geojson):
 
     dom_grp_df = pd.DataFrame()
 
-    df = update_districts(df=df)
+
+    # df = update_districts(df=df)
+
+
+    df = df[df.district.isin(st.session_state.new_district_filt)]
+
 
     if metric != 'Domestic and Foreign Visitors':
 
@@ -3534,6 +3569,7 @@ def styling_func():
 
 
 styling_func()
+
 
 
 # Footer Section
